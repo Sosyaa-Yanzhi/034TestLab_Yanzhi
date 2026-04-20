@@ -44,6 +44,7 @@ public class EnemyScript : MonoBehaviour
 
     void OnEnable()
     {
+        Health = 100;
         // 每次激活时重新启动协程
         StartCoroutine(MoveToTargetPoint());
         StartCoroutine(AttackPlayer());
@@ -170,9 +171,9 @@ public class EnemyScript : MonoBehaviour
         if (Health <= 0)
         {
             scoreCount.score += 1;
-            if (scoreCount.score >= GameData.Score)
+            if (scoreCount.score >= GameData.Instance.GetSecondSceneScore())
             {
-                GameData.Score = scoreCount.score;
+                GameData.Instance.UpdateSecondSceneScore(scoreCount.score);
             }
             GetComponent<SpriteRenderer>().color = Color.yellow;
             Health = 100;

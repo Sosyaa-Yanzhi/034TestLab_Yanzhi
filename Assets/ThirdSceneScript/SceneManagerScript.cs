@@ -11,8 +11,6 @@ public class SceneManagerScript : MonoBehaviour
     public float coolTime;
     void Start()
     {
-        // 设置场景编号为2
-        Data.SceneCode = 2;
         // 队列初始化
         cloudPool = new Queue<GameObject>();
         // 初始化计时器

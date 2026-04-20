@@ -19,11 +19,13 @@ public class JetControlScript : MonoBehaviour
     public GameObject RightGun;
     public GameObject camera;
     public GameObject HitEffect;
+    public int hp = 100;
 
     [Header("导弹模块")]
     public GameObject crosshairPrefab;
     public GameObject missilePrefab;
     public float missileLoadTimer = 0f;
+    public bool isMissileAvailable = false;
 
 
     void Start()
@@ -33,6 +35,7 @@ public class JetControlScript : MonoBehaviour
         camera = GameObject.Find("Main Camera");
         HitEffect.GetComponent<SpriteRenderer>().DOFade(0.5f , 0f);
         HitEffect.SetActive(false);
+        hp = 100;
     }
 
     void Update()
@@ -42,6 +45,8 @@ public class JetControlScript : MonoBehaviour
 
         // 导弹计时 & 发射
         missileLoadTimer += Time.deltaTime;
+        if (missileLoadTimer >= 5f) isMissileAvailable = true;
+        else isMissileAvailable = false;
         if (Input.GetKey(KeyCode.F) && missileLoadTimer >= 5f)
         {
             LaunchMissile();
@@ -182,6 +187,7 @@ public class JetControlScript : MonoBehaviour
         if (other.CompareTag("EnemyLaser"))
         {
             Debug.Log("机体受损！");
+            hp -= 10;
             CameraShake_Effect();
         }
     }

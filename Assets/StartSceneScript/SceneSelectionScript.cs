@@ -25,6 +25,9 @@ public class SceneSelectionScript : MonoBehaviour
     [Header("按钮控件")]
     public Button Lab_1;
     public Button Lab_2;
+    [Header("分数显示文本")]
+    public Text firstSceneScoreText;
+    public Text secondSceneScoreText;
 
     void Start()
     {
@@ -40,9 +43,15 @@ public class SceneSelectionScript : MonoBehaviour
         bg_4.GetComponent<CanvasGroup>().alpha = 0f;
         Lab_1.GetComponent<CanvasGroup>().alpha = 0f;
         Lab_2.GetComponent<CanvasGroup>().alpha = 0f;
+        firstSceneScoreText.GetComponent<CanvasGroup>().alpha = 0f;
+        secondSceneScoreText.GetComponent<CanvasGroup>().alpha = 0f;
         // 为按钮添加监听器
         Lab_1.onClick.AddListener(Lab_1_click);
         Lab_2.onClick.AddListener(Lab_2_click);
+
+        // 显示分数记录
+        ShowScore_1(firstSceneScoreText);
+        ShowScore_2(secondSceneScoreText);
     }
 
     public IEnumerator UIAppearAnimation()
@@ -72,6 +81,8 @@ public class SceneSelectionScript : MonoBehaviour
         {
             Lab_1.GetComponent<CanvasGroup>().DOFade(1f , 0.5f);
             Lab_2.GetComponent<CanvasGroup>().DOFade(1f , 0.5f);
+            firstSceneScoreText.GetComponent<CanvasGroup>().DOFade(1f , 0.5f);
+            secondSceneScoreText.GetComponent<CanvasGroup>().DOFade(1f , 0.5f);
         });
 
         yield return null;
@@ -89,6 +100,10 @@ public class SceneSelectionScript : MonoBehaviour
         Lab_2.DOKill();
         Lab_1.GetComponent<CanvasGroup>().DOFade(0f , 0f);
         Lab_2.GetComponent<CanvasGroup>().DOFade(0f , 0f);
+        firstSceneScoreText.DOKill();
+        secondSceneScoreText.DOKill();
+        firstSceneScoreText.GetComponent<CanvasGroup>().DOFade(0f , 0f);
+        secondSceneScoreText.GetComponent<CanvasGroup>().DOFade(0f , 0f);
 
         // 背景UI移动回初始位置
         bg_1.GetComponent<RectTransform>().DOAnchorPos(originPos_1 , 0.5f);
@@ -130,6 +145,16 @@ public class SceneSelectionScript : MonoBehaviour
             button.GetComponent<RectTransform>().DOScale(0.01f , 0.2f);
         }
     }
+
+    void ShowScore_1(Text scoreText)
+    {
+        scoreText.text = GameData.Instance.GetFirstSceneScore().ToString();
+    }
+    void ShowScore_2(Text scoreText)
+    {
+        scoreText.text = GameData.Instance.GetSecondSceneScore().ToString();
+    }
+    
 
     void Lab_1_click()
     {

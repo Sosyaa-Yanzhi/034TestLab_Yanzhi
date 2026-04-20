@@ -4,21 +4,47 @@ using UnityEngine;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.Video;
 
 [System.Serializable]
 public class Data
 {
-    static public int SceneCode = 0;
-    static public int FirstSceneScore = 0;
+    public int FirstSceneScore = 0;
+    public int SecondSceneScore = 0;
     public int ThirdSceneScore = 0;
+
+    public Data(int firstSceneScore , int secondSceneScore , int thirdSceneScore)
+    {
+        this.FirstSceneScore = firstSceneScore;
+        this.SecondSceneScore = secondSceneScore;
+        this.ThirdSceneScore = thirdSceneScore;
+    }
 }
 
 
 public class GameData : MonoBehaviour
 {
-    public static int Score = 0;
+    // 单例实例
+    public static GameData Instance {get; private set;}
+    private int firstSceneScore = 0;
+    private int secondSceneScore = 0;
+    private int thirdSceneScore = 0;
     // 保存文件名称
     private string saveFileName = "gamesave.json";
+    void Awake()
+    {
+        // 单例初始化
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
     // 获取完整的文件保存路径
     private string GetSavePath()
     {
@@ -29,8 +55,7 @@ public class GameData : MonoBehaviour
     public void SaveData()
     {
         // 创建数据对象
-        Data data = new Data();
-        data.ThirdSceneScore = Score;
+        Data data = new Data(firstSceneScore , secondSceneScore , thirdSceneScore);
         // 将对象转为Json字符串
         string jsonString = JsonUtility.ToJson(data , true); // true表示格式化输出，更为美观
         // 获取保存路径
@@ -47,37 +72,53 @@ public class GameData : MonoBehaviour
     }
 
     // 加载数据
-    public int LoadData()
+    public void LoUpdateata()
     {
         string savePath = GetSavePath();
-
-        // 检查文件路径是否存在
         if (File.Exists(savePath))
         {
-            try
-            {
-                // 读取Json字符串
-                string jsonString = File.ReadAllText(savePath);
-                // 将Json字符串转换为对象
-                Data data = JsonUtility.FromJson<Data>(jsonString);
-                // 返回分数
-                return data.ThirdSceneScore;
-            }
-            catch (System.Exception e)
-            {
-                Debug.Log($"加载失败：{e.Message}");
-                return 0;
-            }
+            string json = File.ReadAllText(savePath);
+            Data data = JsonUtility.FromJson<Data>(json);
+            ApplyData(data);
         }
         else
         {
-            // 如果文档不存在，则返回默认值
-            return 0;
+            firstSceneScore = 0;
+            secondSceneScore = 0;
+            thirdSceneScore = 0;
         }
     }
 
+    void ApplyData(Data Data)
+    {
+        firstSceneScore = Data.FirstSceneScore;
+        secondSceneScore = Data.SecondSceneScore;
+        thirdSceneScore = Data.ThirdSceneScore;
+    }
+
+    #region 公开接口
+    public void UpdateFirstSceneScore(int newScore)
+    {
+        firstSceneScore = newScore;
+        SaveData();
+    }
+    public void UpdateSecondSceneScore(int newScore)
+    {
+        secondSceneScore = newScore;
+        SaveData();
+    }
+    public void UpdateThirdSceneScore(int newScore)
+    {
+        thirdSceneScore = newScore;
+        SaveData();
+    }
+    public int GetFirstSceneScore() => firstSceneScore;
+    public int GetSecondSceneScore() => secondSceneScore;
+    public int GetThirdSceneScore() => thirdSceneScore;
+    #endregion
+
     void Start()
     {
-        Score = LoadData();
+        LoUpdateata();
     }
 }

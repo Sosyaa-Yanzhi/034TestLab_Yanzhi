@@ -39,7 +39,7 @@ public class StartSceneUI : MonoBehaviour
         // 设置按键 - 监听器
         QuitGameButton.onClick.AddListener(QuitGameButton_click);
         // Json测试
-        Debug.Log($"第二关卡得分纪录：{GameData.Score}");
+        Debug.Log($"第二关卡得分纪录：{GameData.Instance.GetSecondSceneScore()}");
     }
 
     void StartGameButton_click()
