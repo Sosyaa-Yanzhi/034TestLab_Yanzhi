@@ -171,12 +171,13 @@ public class EnemyScript : MonoBehaviour
         if (Health <= 0)
         {
             scoreCount.score += 1;
-            if (scoreCount.score >= GameData.Instance.GetSecondSceneScore())
-            {
-                GameData.Instance.UpdateSecondSceneScore(scoreCount.score);
-            }
             GetComponent<SpriteRenderer>().color = Color.yellow;
-            Health = 100;
+
+            // 禁用碰撞体
+            GetComponent<BoxCollider2D>().enabled = false;
+            // 隐藏本体
+            GetComponent<SpriteRenderer>().DOFade(0f , 0f);
+
             explosionObject.SetActive(true);
             // 爆炸动画
             explosionObject.GetComponent<SpriteRenderer>().DOFade(0.5f , 0.5f);
@@ -186,7 +187,7 @@ public class EnemyScript : MonoBehaviour
                 explosionObject.GetComponent<Transform>().DOScale(0.6f , 0f);
                 explosionObject.GetComponent<SpriteRenderer>().DOFade(1f , 0f);
                 explosionObject.SetActive(false);
-                enemyManager.ReturnEnemy(poolIndex , gameObject);
+                Destroy(gameObject);
             });
         }
     }
