@@ -10,11 +10,23 @@ public class OnhitScript : MonoBehaviour
     public GameObject mainCamera;
     private float animationDuration = 0.5f;
     private float maxOpacity = 0.5f;
+    [Header("生命值")]
+    public int health = 100;
 
     void Start()
     {
         mainCamera = GameObject.Find("Main Camera");
         hitEffection.SetActive(false);
+        health = 100;
+    }
+
+    void Update()
+    {
+        if (health <= 0)
+        {
+            Lab_1_EventsManager.Instance.GameOver(true);
+            Debug.Log("Spacecraft explosed!!!");
+        }
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -22,6 +34,12 @@ public class OnhitScript : MonoBehaviour
         {
             Debug.Log("被陨石击中！");
             StartCoroutine(PlayAnimation());
+            health -= 20;
+        }
+        if (collision.CompareTag("Planet"))
+        {
+            Lab_1_EventsManager.Instance.GameOver(true);
+            Debug.Log("Spacecraft explosed!!!(Hit on planet)");
         }
     }
 

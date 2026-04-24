@@ -30,14 +30,17 @@ public class GameOver : MonoBehaviour
     }
     void Update()
     {
-        if (jetControlScript.hp <= 0)
+        if (jetControlScript != null)
         {
-            // 飞船被击毁后触发失败界面
-            GameOverFun();
-            timer += Time.deltaTime; // 开始计时
-            if (timer >= 7f)
+            if (jetControlScript.hp <= 0)
             {
-                SceneManager.LoadScene("StartScene");  // 计时结束后自动返回主菜单
+                // 飞船被击毁后触发失败界面
+                GameOverFun();
+                timer += Time.deltaTime; // 开始计时
+                if (timer >= 7f)
+                {
+                    SceneManager.LoadScene("StartScene");  // 计时结束后自动返回主菜单
+                }
             }
         }
     }

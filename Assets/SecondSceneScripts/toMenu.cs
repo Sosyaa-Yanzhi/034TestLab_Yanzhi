@@ -4,14 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class BackToMenuUI_Called : MonoBehaviour
+public class toMenu : MonoBehaviour
 {
     [Header("返回主菜单UI")]
     public Image backToMenuImage;
     public Button confirmButton;
     public Button cancelButton;
-    [Header("脚本引用")]
-    public JetControlScript jetControlScript;
 
     private bool isUICalled = false;
 
@@ -26,27 +24,21 @@ public class BackToMenuUI_Called : MonoBehaviour
 
     void Update()
     {
-        if (jetControlScript != null)
-        {
-            if (jetControlScript.hp > 0)
+        if (Input.GetKeyDown(KeyCode.P))
             {
-                if (Input.GetKeyDown(KeyCode.P))
+                isUICalled = !isUICalled;
+                if (isUICalled)
                 {
-                    isUICalled = !isUICalled;
-                    if (isUICalled)
-                    {
-                        // 暂停游戏
-                        Time.timeScale = 0f;
-                        backToMenuImage.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        Time.timeScale = 1f;
-                        backToMenuImage.gameObject.SetActive(false);
-                    }
+                    // 暂停游戏
+                    Time.timeScale = 0f;
+                    backToMenuImage.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Time.timeScale = 1f;
+                    backToMenuImage.gameObject.SetActive(false);
                 }
             }
-        }
     }
 
     void OnConfirmClick()
